@@ -14,26 +14,18 @@ def print_hi(name):
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     #    print_hi('PyCharm')
-    try:
-        a = float(input('a = '))
-        b = float(input('b = '))
-        c = float(input('c = '))
+    l:[0,1,2,3,4,5]
+    l[1] #1
+    l[0:2] #[0,1] aka l[:0]
+    l[2:] #[2,3,4,5]
+    l[-1] #[5]
+    l[::2] #[0,2,4]
+    l[0:11:2] #выбрать элементы с 0 по 10 включительно с шагом 2
+    l[1:-1] #выбрать все эл-ты, кроме 1 и последнего
+    l[::-1] #выбрать эл-ты реверсивно
+    n=3 # n!=0
+    l[n:] + l[n-1:] #?
 
-        d = b ** 2 - 4 * a * c
-        if d < 0:
-            print("Решение комплексное")
-        elif d == 0:
-            x = -b / (2 * a)
-            print('Один корень: x = {:f}'.format(x))
-        elif a == 0:
-            print("Вы не туда попали со своим линейным уравнением")
-        else:
-            x1, x2 = (-b - math.sqrt(d)) / (2 * a), (-b + math.sqrt(d)) / (2 * a)
-            print('Два корня: x1,2 =', x1, '; ', x2)
-    except ValueError:
-        print('не число')
-    except ZeroDivisionError:
-        print('деление на 0')
 
 #    name = input("Hi! What are you called, Jake Sully?\n")
 #    print_hi(name)
