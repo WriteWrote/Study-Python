@@ -3,33 +3,40 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
-def m_iter(m):
-    i = 0
-    j = 0
-    d = 1
-
-    for j in range(len(inp_array) + 1):
+def m_iter(m: list) -> iter():
+    for j in range(len(m) + 1):
         for i in range(j):
-            if (j % 2 == 0):
-                yield inp_array[j - i - 1][i]
+            if j % 2 == 0:
+                yield m[j - i - 1][i]
             else:
-                yield inp_array[i][j - i - 1]
+                yield m[i][j - i - 1]
 
-    for j in range(len(inp_array) - 1, -1, -1):
+    for j in range(len(m) - 1, -1, -1):
         for i in range(j - 1, -1, -1):
-            if (j % 2 != 0):
-                yield inp_array[j - i + (len(inp_array) - j - 1)][len(inp_array) - (j - i)]
+            if j % 2 != 0:
+                yield m[j - i + (len(m) - j - 1)][len(m) - (j - i)]
             else:
-                yield inp_array[len(inp_array) - (j - i)][j - i + (len(inp_array) - j - 1)]
+                yield m[len(m) - (j - i)][j - i + (len(m) - j - 1)]
 
 
-def check_array(input_array):
+def check_array(arr: list) -> tuple:
     res = False
     seq = []  # for sequence
 
-    checkpoint = len(input_array)
-    for x in range(len(input_array)):
-        res = True
+    prev_el = None
+    for x in m_iter(arr):
+        # safe-point to avoid None
+        if prev_el is None:
+            prev_el = x
+        # check if there is ++ / -- sequence
+        else:
+            if (x == prev_el + 1) or (prev_el - 1 == x):
+                res = True
+            else:
+                res = False
+        # change prev_el
+        prev_el = x
+
     # return tuple
     return res, seq
 
@@ -53,8 +60,7 @@ if __name__ == '__main__':
         finally:
             inp_file.close()
 
-        l = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]]
-        for x in m_iter(l):
+        for x in m_iter(inp_array):
             print(x)
 
         # the key element of task
