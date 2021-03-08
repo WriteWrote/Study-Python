@@ -3,7 +3,7 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
-def m_iter(m: list) -> iter():
+def m_iter(m: list):
     for j in range(len(m) + 1):
         for i in range(j):
             if j % 2 == 0:
@@ -44,7 +44,7 @@ def check_array(arr: list) -> tuple:
 if __name__ == '__main__':
     try:
         # read from file
-        inp_file = open("input.txt", "r")
+        inp_file = open("input2.txt", "r")
         inp_array = []
         try:
             inp_str = []
