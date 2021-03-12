@@ -1,73 +1,55 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-def m_iter(m: list):
-    for j in range(len(m) + 1):
-        for i in range(j):
-            if j % 2 == 0:
-                yield m[j - i - 1][i]
-            else:
-                yield m[i][j - i - 1]
-
-    for j in range(len(m) - 1, -1, -1):
-        for i in range(j - 1, -1, -1):
-            if j % 2 != 0:
-                yield m[j - i + (len(m) - j - 1)][len(m) - (j - i)]
-            else:
-                yield m[len(m) - (j - i)][j - i + (len(m) - j - 1)]
+from classes import Student
 
 
-def check_array(arr: list) -> tuple:
-    res = False
-    seq = []  # for sequence
+def read_from_file(name: str) -> list:
+    """Reading from file to list of string and repacking string lines to objects of Student class"""
+    inp_file = open(name, "r")
+    result = []
+    try:
+        inp_str = []
+        for line in inp_file:
+            inp_str.append(line.strip().split("\n")[0])
+        # casting
+        for line in inp_str:
+            values = line.split(" ")
+            next_student = Student(str(values[0]), str(values[1]), str(values[2]),
+                                   # first name, surname and parent name
+                                   str(values[3]),  # sex
+                                   int(values[4]),  # grade of student
+                                   float(values[5]))  # mark of student
+            result.append(next_student)
+    except Exception as e:
+        print(e)
+    finally:
+        inp_file.close()
+    return result
 
-    prev_el = None
-    for x in m_iter(arr):
-        # safe-point to avoid None
-        if prev_el is None:
-            prev_el = x
-        # check if there is ++ / -- sequence
-        else:
-            if (x == prev_el + 1) or (prev_el - 1 == x):
-                res = True
-            else:
-                res = False
-        # change prev_el
-        prev_el = x
 
-    # return tuple
-    return res, seq
+def _grade_iter(stud_l: list, curr_grade: int, grade_arr: list):
+    for stud in stud_l:
+        """
+        # if there is 5 or 6 grade, they will be inserted into the list of grades
+        try:
+            if stud.get_grade > grade_arr[-1]:
+                grade_arr.append(stud.get_grade)
+        except Exception as e:
+            print(e)
+        """
+        # how python knows that there are other classes and their voids if he doesn't see them?
+        if stud.get_grade() is curr_grade:
+            yield stud
+
+
+def _cut_grades(inp_list: list) -> tuple:
+    """separating input list of students to several lists according to the grades"""
+    result_l = []
+    grade_arr = [1, 2, 3, 4]
+    for grade in grade_arr:
+        buff = list()
+        for student in _grade_iter(inp_list, grade, grade_arr):
+            buff.append(student)
+        result_l.append(buff)
+    return tuple(result_l)
 
 
 if __name__ == '__main__':
-    try:
-        # read from file
-        inp_file = open("input2.txt", "r")
-        inp_array = []
-        try:
-            inp_str = []
-            for line in inp_file:
-                inp_str.append(line.strip().split("\n")[0])
-            # casting
-            for line in inp_str:
-                inp_array.append([float(x) for x in line.split(' ')])
-            # checking
-            print(inp_array)
-        except Exception as e:
-            print(e)
-        finally:
-            inp_file.close()
-
-        for x in m_iter(inp_array):
-            print(x)
-
-        # the key element of task
-        result, seq = check_array(inp_array)
-        print(result, seq)
-
-    except FileNotFoundError:
-        print("No such file")
-    except Exception as e:
-        print(e)
