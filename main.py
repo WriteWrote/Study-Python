@@ -1,4 +1,4 @@
-from classes import Student
+from student import Student
 
 
 def read_from_file(name: str) -> list:
@@ -13,7 +13,7 @@ def read_from_file(name: str) -> list:
         for line in inp_str:
             values = line.split(" ")
             next_student = Student(str(values[0]), str(values[1]), str(values[2]),
-                                   # first name, surname and parent name
+                                   # surname, first name and parent name
                                    str(values[3]),  # sex
                                    int(values[4]),  # grade of student
                                    float(values[5]))  # mark of student
@@ -23,6 +23,19 @@ def read_from_file(name: str) -> list:
     finally:
         inp_file.close()
     return result
+
+
+def replace_doc(result: list, name: str):
+    """Replacing old file with new values"""
+    repl_file = open(name, "w")
+    try:
+        for stud in result:
+            out_str = stud.full_name + " " + str(stud.sex) + " " + str(stud.grade) + " " + str(stud.mark)
+            repl_file.write(out_str + "\n")
+    except Exception as ex:
+        print(ex)
+    finally:
+        repl_file.close()
 
 
 def _grade_iter(stud_l: list, curr_grade: int, grade_arr: list):
@@ -36,7 +49,7 @@ def _grade_iter(stud_l: list, curr_grade: int, grade_arr: list):
             print(e)
         """
         # how python knows that there are other classes and their voids if he doesn't see them?
-        if stud.get_grade() is curr_grade:
+        if stud.grade() is curr_grade:
             yield stud
 
 
@@ -52,12 +65,35 @@ def _cut_grades(inp_list: list) -> tuple:
     return tuple(result_l)
 
 
-def _weed_out_student(inp_students: list) -> list:
-    weed_result = list()
-    # comparator
-    inp_students.sort(key=lambda s: (s._mark))
+def _weed_out_student(inp_students: list, N: int, X: float) -> list:
+    # weed all students with mark < X
+    weed_result = [curr_stud.mark() < X for curr_stud in inp_students]
+    # delete all student with mark < X
+    if len(inp_students) - len(weed_result) > N:
+        inp_students = list(filter(lambda x: x.mark() < x, inp_students))
+    else:
+        for i in range(len(inp_students) - N):
+            weed_result.pop()
+        inp_students.remove(weed_result)
+    return inp_students
 
-    return weed_result
+
+def expel_student(inp_students: list, N: int, X: float) -> list:
+    result = list()
+    grades = _cut_grades(inp_students)
+    for g in grades:
+        result.append(_weed_out_student(list(g), N, X))
+    return result
 
 
 if __name__ == '__main__':
+    try:
+        file_name = input("Enter file name: ")
+        stud_stayed = read_from_file(file_name)
+        N = int(input("Enter minimum number of students left: "))
+        X = float(input("Enter minimum mark: "))
+        stud_stayed = expel_student(stud_stayed, N, X)
+        replace_doc(stud_stayed, file_name)
+
+    except Exception as e:
+        print(e)
