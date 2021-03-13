@@ -52,4 +52,12 @@ def _cut_grades(inp_list: list) -> tuple:
     return tuple(result_l)
 
 
+def _weed_out_student(inp_students: list) -> list:
+    weed_result = list()
+    # comparator
+    inp_students.sort(key=lambda s: (s._mark))
+
+    return weed_result
+
+
 if __name__ == '__main__':
